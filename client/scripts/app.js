@@ -1,9 +1,8 @@
-
 var app = {
 
   //TODO: The current 'toggleFriend' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'http://127.0.0.1:3000/classes/messages',
+  server: 'http://127.0.0.1:3000',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -27,6 +26,8 @@ var app = {
     // Fetch previous messages
     app.startSpinner();
     app.fetch(false);
+
+    
 
     // Poll for new messages
     setInterval(app.fetch, 3000);
@@ -58,7 +59,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      //data: 'classes/messages',
+      data: 'classes/messages',
       success: function(data) {
         // Don't bother if we have nothing to work with
         console.log(data);
@@ -218,7 +219,7 @@ var app = {
       username: app.username,
       text: app.$message.val(),
       roomname: app.roomname || 'lobby',
-      objectId: new Date()
+      objectId: new Date(),
     };
 
     app.send(message);

@@ -30,7 +30,7 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
+  console.log(url.parse('http://127.0.0.1:3000/?classes/messages'));
   // The outgoing status.
   var statusCode = 200;
 
@@ -47,24 +47,35 @@ var requestHandler = function(request, response) {
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  var pathname = url.parse(request.url).pathname;
+  var pathname = url.parse(request.url).path;
   //response.writeHead(statusCode, headers);
   //response.end(JSON.stringify({results: [1, 2, 3, 4]}));
+  var newName = '';
+  // pathname.split('').forEach(function(letter) {
+  //   if (!(letter === '?')) {
+  //     newName += letter;
+  //   }
+  // });
+  //pathname.split('?').join('');
 
-
-
-  console.log(request);
-  if (pathname !== '/classes/messages') {
-    console.log('inside here');
-    statusCode = 404;
-  } else 
-  if (request.method === 'GET') {
+  console.log('path', newName);
+  if (request.method === 'OPTIONS') {
     statusCode = 200;
-  } else if (request.method === 'POST') {
+    response.writeHead(statusCode, headers);
+    response.end();
+  }
+
+
+  if (request.method === 'POST') {
     statusCode = 201;
     request.on('data', function(data) {
       resultsData.results.push(JSON.parse(data));
     });
+  } else if (pathname !== '/?classes/messages') {
+    console.log('inside here');
+    statusCode = 404;
+  } else if (request.method === 'GET') {
+    statusCode = 200;
   }
   
   response.writeHead(statusCode, headers);
