@@ -25,7 +25,7 @@ var app = {
 
     // Fetch previous messages
     app.startSpinner();
-    app.fetch(false);
+    app.fetch(true);
 
     
 
@@ -56,22 +56,20 @@ var app = {
 
   fetch: function(animate) {
     $.ajax({
-      url: app.server,
+      url: app.server + '/classes/messages',
       type: 'GET',
       contentType: 'application/json',
-      data: 'classes/messages',
+      //data: 'classes/messages',
       success: function(data) {
         // Don't bother if we have nothing to work with
-        console.log(data);
         if (!data.results && !data.results.length) { return; }
 
         // Get the last message
-        var mostRecentMessage = data.results[data.results.length - 1];
+        var mostRecentMessage = data.results[0];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
-          console.log('newmsg');
           // Update the UI with the fetched rooms
           app.populateRooms(data.results);
 
@@ -94,9 +92,7 @@ var app = {
 
   populateMessages: function(results, animate) {
     // Clear existing messages
-
     app.clearMessages();
-    app.addMessage(results);
     app.stopSpinner();
     if (Array.isArray(results)) {
       // Add all fetched messages
